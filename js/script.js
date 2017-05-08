@@ -23,12 +23,13 @@ function loadData() {
 
     //GET AND ADD NYT ARTICLES
     const nytKey = '923cd967e8564499ad613f4d55375c68';
+    const nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json"
     var nytData = {
                   'api-key': nytKey,
                   'fq': city
                 };
     // var nytRespData = $.getJSON("https://api.nytimes.com/svc/search/v2/articlesearch.json", nytData);
-    $.getJSON("https://api.nytimes.com/svc/search/v2/articlesearch.json", nytData,function (data){
+    $.getJSON(nytURL, nytData,function (data){
         console.log(data);
         data.response.docs.forEach(function(doc){
             $nytElem.append('<li class="article"><a href="'+doc.web_url+'">'+doc.headline.main+'</a><p>'+doc.snippet+'</p></li>')
@@ -37,6 +38,35 @@ function loadData() {
         $nytHeaderElem.html("New York Times Articles Could Not Be Loaded") 
     });
 
+    const wikiApiURL = "https://en.wikipedia.org/w/api.php";
+    var wikiReqURL = wikiApiURL+'?action=opensearch&search='+city+'&format=json';
+    // var queryData = {
+    //     action:'opensearch',
+    //     search: city,
+    //     format: json
+    // };
+
+    //MY WAY
+    // $.ajax({
+    //     url: wikiApiURL,
+    //     data: queryData,
+    //     dataType: 'json',
+    //     type: 'POST',
+    //     headers: { 'Api-User-Agent': 'Example/1.0' }
+    // }).done(function(data){
+    //     console.log("post" + data);
+    // });
+
+    // //THE UDACITY WAY
+    $.ajax({
+        url: wikiReqURL,
+        dataType: 'jsonp',
+        type: 'POST',
+        headers: { 'Api-User-Agent': 'Example/1.0' },
+        success: function(data) {
+            console.log(data);
+        }
+    });
     return false;
 };
 
